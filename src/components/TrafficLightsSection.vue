@@ -6,9 +6,10 @@
             'red': currentColor === 'red',
             'yellow': currentColor === 'yellow',
             'green': currentColor === 'green',
-            'active': activeColor === currentColor
+            'active': activeColor === currentColor,
+            'blinking': isBlinking
     }">
-      <div v-if="activeColor === currentColor" class="timer">{{timer}}</div>
+      <div v-if="activeColor === currentColor" class="timer">{{ timer }}</div>
     </div>
   </div>
 </template>
@@ -21,13 +22,30 @@ export default {
       type: String,
       required: true
     },
-    timer:{
+    timer: {
       type: Number,
       default: null
     },
     activeColor: String,
     default: false
   },
+  data() {
+    return {
+      isBlinking: false
+    }
+  },
+  methods: {
+    setBlinking(){
+      this.isBlinking = !this.isBlinking
+    }
+  },
+  updated: function () {
+    this.$nextTick(function () {
+      if (this.activeColor === this.currentColor && this.timer === 3) {
+        setInterval(this.setBlinking, 1000)
+      }
+    })
+  }
 }
 </script>
 
@@ -56,16 +74,20 @@ export default {
 }
 
 .yellow {
-  background-color: yellow;
+  background-color: #FFD700;
 }
 
 .green {
   background-color: green;
 }
+
 .active {
   opacity: 1;
 }
-.timer{
+.blinking{
+  opacity: 0.4;
+}
+.timer {
   font-size: 60px;
   color: white;
 }

@@ -73,8 +73,18 @@ export default {
     }
   },
   mounted() {
-    this.timer = this.timeLimit
+    const sessionTimer = +sessionStorage.getItem('timer')
+    if(sessionTimer>1){
+      this.timer = sessionTimer
+    } else {
+      this.timer = this.timeLimit
+    }
     setInterval(this.decrementTimer, 1000)
+  },
+  updated: function () {
+    this.$nextTick(function () {
+     sessionStorage.setItem('timer',this.timer)
+    })
   }
 }
 </script>
