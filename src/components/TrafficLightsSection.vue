@@ -3,18 +3,19 @@
     <div
       class="section_lights"
       :class="{
-            'red': currentColor === 'red',
-            'yellow': currentColor === 'yellow',
-            'green': currentColor === 'green',
-            'active': activeColor === currentColor,
-            'blinking': isBlinking
-    }">
+        'red': currentColor === red,
+        'yellow': currentColor === yellow,
+        'green': currentColor === green,
+        'active': activeColor === currentColor,
+        'blinking': isBlinking
+      }">
       <div v-if="activeColor === currentColor" class="timer">{{ timer }}</div>
     </div>
   </div>
 </template>
 
 <script>
+import {COLOR_GREEN, COLOR_RED, COLOR_YELLOW} from "../const";
 
 export default {
   props: {
@@ -27,21 +28,24 @@ export default {
       default: null
     },
     activeColor: String,
-    default: false
+    required: true
   },
   data() {
     return {
-      isBlinking: false
+      isBlinking: false,
+      red: COLOR_RED,
+      yellow: COLOR_YELLOW,
+      green: COLOR_GREEN
     }
   },
   methods: {
-    setBlinking(){
+    setBlinking() {
       this.isBlinking = !this.isBlinking
     }
   },
   updated: function () {
     this.$nextTick(function () {
-      if (this.activeColor === this.currentColor && this.timer === 3) {
+      if (this.activeColor === this.currentColor && this.timer <= 3) {
         setInterval(this.setBlinking, 1000)
       }
     })
@@ -57,38 +61,59 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 3px;
+  box-shadow: 0.4em 0.4em 5px rgba(122, 122, 122, 0.5);
 }
 
 .section_lights {
   height: 130px;
   width: 130px;
   border-radius: 100%;
-  opacity: 0.3;
   display: flex;
   align-items: center;
   justify-content: center;
+  filter: brightness(40%);
 }
 
 .red {
   background-color: red;
 }
 
+
 .yellow {
   background-color: #FFD700;
 }
+
 
 .green {
   background-color: green;
 }
 
+
 .active {
-  opacity: 1;
+  filter: none;
+  animation: shadow 0.5s infinite alternate;
 }
-.blinking{
-  opacity: 0.4;
+
+
+@keyframes shadow {
+  from {
+    box-shadow: 0 0 55px 3px lightgrey;
+  }
+  to {
+    box-shadow: 0 0 56px 4px lightgrey;
+  }
 }
+
+.blinking {
+  filter: brightness(75%);
+  animation: none;
+}
+
 .timer {
-  font-size: 60px;
+  font-size: 80px;
   color: white;
+  font-family: 'Iceberg';
 }
+
 </style>

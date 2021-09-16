@@ -25,6 +25,6 @@ export default new Router({
       name: 'Green',
       component: Green
     },
-    { path: '/', redirect: '/red' }
+    { path: '/', redirect: ROUTE_RED }
   ]
 })

@@ -30,7 +30,7 @@ export default {
       type: Number,
       required: true
     },
-    prevRoute:{
+    prevRoute: {
       type: Object,
       default: null
     }
@@ -38,53 +38,73 @@ export default {
   data() {
     return {
       timer: 0,
-      red: 'red',
-      yellow: 'yellow',
-      green: 'green',
+      red: COLOR_RED,
+      yellow: COLOR_YELLOW,
+      green: COLOR_GREEN,
     }
   },
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      vm.prevRoute = from
-    })
-  },
+
   methods: {
-    decrementTimer() {
-      this.timer -= 1
-      if (this.timer === 0) {
-        switch (this.activeColor) {
-          case COLOR_RED:
-            this.$router.push(ROUTE_YELLOW)
-            break
-          case COLOR_YELLOW:
-            if (this.prevRoute.path === ROUTE_RED) {
-              this.$router.push(ROUTE_GREEN)
-            } else {
-              this.$router.push(ROUTE_RED)
-            }
-            break
-          case COLOR_GREEN:
-            this.$router.push(ROUTE_YELLOW)
-            break
-          default:
-            this.$router.push(ROUTE_RED)
+    setTimer() {
+      const sessionTimer = +sessionStorage.getItem('timer')
+      if (sessionTimer > 0) {
+        if (sessionTimer > this.timeLimit) {
+          this.timer = this.timeLimit
+        } else {
+          this.timer = sessionTimer
         }
+      } else {
+        this.timer = this.timeLimit
+      }
+    },
+    downTimer() {
+      setTimeout(() => {
+        this.timer--
+        this.downTimer()
+      }, 1000)
+    },
+    selectNextPath() {
+      switch (this.activeColor) {
+        case COLOR_RED:
+          this.$router.push(ROUTE_YELLOW)
+          break
+        case COLOR_YELLOW:
+          let sessionPrevRoute
+          if (this.prevRoute && this.prevRoute.path.length > 1) {
+            sessionPrevRoute = this.prevRoute.path
+          } else {
+            sessionPrevRoute = sessionStorage.getItem('prevRoute')
+          }
+          if (sessionPrevRoute === ROUTE_RED) {
+            this.$router.push(ROUTE_GREEN)
+          } else {
+            this.$router.push(ROUTE_RED)
+          }
+          break
+        case COLOR_GREEN:
+          this.$router.push(ROUTE_YELLOW)
+          break
+        default:
+          this.$router.push(ROUTE_RED)
+      }
+    }
+  },
+  watch: {
+    timer(newValue) {
+      sessionStorage.setItem('timer', newValue)
+      if (newValue === -1) {
+        this.selectNextPath()
+      }
+    },
+    prevRoute(newValue) {
+      if (newValue && newValue.path.length > 1) {
+        sessionStorage.setItem('prevRoute', newValue.path)
       }
     }
   },
   mounted() {
-    const sessionTimer = +sessionStorage.getItem('timer')
-    if(sessionTimer>1){
-      this.timer = sessionTimer
-    } else {
-      this.timer = this.timeLimit
-    }
-    setInterval(this.decrementTimer, 1000)
+    this.setTimer()
+    this.downTimer()
   },
-  updated: function () {
-    this.$nextTick(function () {
-     sessionStorage.setItem('timer',this.timer)
-    })
-  }
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <traffic-lights :active-color="color" :time-limit="timer" :prevRoute="prevRoute"/>
+  <traffic-lights :active-color="color" :time-limit="timer" :prev-route="prevRoute"/>
 </template>
 
 <script>
