@@ -65,7 +65,7 @@ export default {
         this.downTimer()
       }, 1000)
     },
-    selectNextPath() {
+    pushNextPath() {
       switch (this.activeColor) {
         case COLOR_RED:
           this.$router.push(ROUTE_YELLOW)
@@ -95,7 +95,7 @@ export default {
     timer(newValue) {
       sessionStorage.setItem('timer', newValue)
       if (newValue === -1) {
-        this.selectNextPath()
+        this.pushNextPath()
       }
     },
     prevRoute(newValue) {
