@@ -17,7 +17,15 @@
 
 <script>
 import TrafficLightsSection from "../components/TrafficLightsSection";
-import {COLOR_GREEN, COLOR_RED, COLOR_YELLOW, ROUTE_GREEN, ROUTE_RED, ROUTE_YELLOW} from "../const";
+import {
+  COLOR_GREEN,
+  COLOR_RED,
+  COLOR_YELLOW,
+  ROUTE_GREEN,
+  ROUTE_RED,
+  ROUTE_YELLOW,
+  TRAFFIC_LIGHTS_INTERVAL
+} from "../const";
 
 export default {
   components: {TrafficLightsSection},
@@ -59,7 +67,7 @@ export default {
       setTimeout(() => {
         this.timer--
         this.downTimer()
-      }, 1000)
+      }, TRAFFIC_LIGHTS_INTERVAL)
     },
     pushNextPath() {
       switch (this.activeColor) {
