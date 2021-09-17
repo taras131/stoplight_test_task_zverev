@@ -11,7 +11,7 @@ npm install
 # serve with hot reload at localhost:8080
 npm run start
 
-# run unit test
+# run unit tests
 jest
 ```
 
