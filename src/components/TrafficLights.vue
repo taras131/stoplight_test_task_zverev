@@ -47,16 +47,12 @@ export default {
   methods: {
     setTimer() {
       const isPrevComponentFinish = sessionStorage.getItem('isPrevComponentFinish')
-      if (isPrevComponentFinish) {
+      const sessionTimer = +sessionStorage.getItem('timer')
+      if (isPrevComponentFinish || sessionTimer < 0) {
         this.timer = this.timeLimit
         sessionStorage.setItem('isPrevComponentFinish', '')
-        return
-      }
-      const sessionTimer = +sessionStorage.getItem('timer')
-      if (sessionTimer) {
-        this.timer = sessionTimer
       } else {
-        this.timer = this.timeLimit
+        this.timer = sessionTimer
       }
     },
     downTimer() {

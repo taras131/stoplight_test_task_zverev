@@ -2,20 +2,14 @@
   <div class="section_wrapper">
     <div
       class="section_lights"
-      :class="{
-        'red': currentColor === red,
-        'yellow': currentColor === yellow,
-        'green': currentColor === green,
-        'active': activeColor === currentColor,
-        'blinking': isBlinking
-      }">
+      :class="setStyleClass()">
       <div v-if="activeColor === currentColor" class="timer">{{ timer }}</div>
     </div>
   </div>
 </template>
 
 <script>
-import {COLOR_GREEN, COLOR_RED, COLOR_YELLOW} from "../const";
+import {BLINKING_INTERVAL, COLOR_GREEN, COLOR_RED, COLOR_YELLOW} from "../const";
 
 export default {
   props: {
@@ -39,6 +33,15 @@ export default {
     }
   },
   methods: {
+    setStyleClass(){
+      return{
+        'red': this.currentColor === COLOR_RED,
+        'yellow': this.currentColor === COLOR_YELLOW,
+        'green': this.currentColor === COLOR_GREEN,
+        'active': this.activeColor === this.currentColor,
+        'blinking': this.isBlinking
+      }
+    },
     setBlinking() {
       this.isBlinking = !this.isBlinking
     }
@@ -46,7 +49,7 @@ export default {
   updated: function () {
     this.$nextTick(function () {
       if (this.activeColor === this.currentColor && this.timer <= 3) {
-        setInterval(this.setBlinking, 1000)
+        setInterval(this.setBlinking, BLINKING_INTERVAL)
       }
     })
   }
